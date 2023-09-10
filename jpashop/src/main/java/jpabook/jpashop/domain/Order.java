@@ -23,7 +23,7 @@ public class Order {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY)
@@ -35,4 +35,19 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status; // 주문상태 order, cancel
+
+    public void setMember(Member member){
+        this.member = member;
+        member.getOrders().add(this);
+    }
+
+    public void setOrderItem(OrderItem orderItem){
+        orderItems.add(orderItem);
+        orderItem.setOrder(this);
+    }
+
+    public void setDelivary(Delivery delivery){
+        this.delivery = delivery;
+        delivery.setOrder(this);
+    }
 }
